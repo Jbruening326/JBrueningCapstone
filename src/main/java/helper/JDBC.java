@@ -29,7 +29,6 @@ public abstract class JDBC {
         }
         catch(Exception e){
             System.out.println("Error" + e.getMessage());
-            System.out.println("Not Working");
         }
     }
 

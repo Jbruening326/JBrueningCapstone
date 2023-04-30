@@ -2,7 +2,7 @@ package controller;
 
 import dao.AppointmentDao;
 import dao.CountryDao;
-import dao.CustomerDao;
+import dao.ClientDao;
 import dao.FirstLevelDivisionDao;
 import helper.ControllerHelper;
 import javafx.collections.FXCollections;
@@ -12,8 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
+import model.Client;
 import model.Country;
-import model.Customer;
 import model.FirstLevelDivision;
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * This class contains methods to interact with the "customers.fxml" form. Author: Joseph Bruening
  */
-public class CustomerController implements Initializable {
+public class ClientController implements Initializable {
     /**
      * Creates a Label object
      */
@@ -79,35 +79,35 @@ public class CustomerController implements Initializable {
     /**
      * Creates a TableView object of Customer objects
      */
-    public TableView<Customer> customerTableView;
+    public TableView<Client> customerTableView;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, Integer> customerIdCol;
+    public TableColumn<Client, Integer> customerIdCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> nameCol;
+    public TableColumn<Client, String> nameCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> addressCol;
+    public TableColumn<Client, String> addressCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> postalCol;
+    public TableColumn<Client, String> postalCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> phoneCol;
+    public TableColumn<Client, String> phoneCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> countryCol;
+    public TableColumn<Client, String> countryCol;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Customer, String> firstLevelCol;
+    public TableColumn<Client, String> firstLevelCol;
 
 
     /**
@@ -118,7 +118,7 @@ public class CustomerController implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            customerTableView.setItems(CustomerDao.getAll());
+            customerTableView.setItems(ClientDao.getAll());
             customerIdCol.setCellValueFactory(new PropertyValueFactory<>("CustomerId"));
             nameCol.setCellValueFactory(new PropertyValueFactory<>("CustomerName"));
             addressCol.setCellValueFactory(new PropertyValueFactory<>("Address"));
@@ -164,25 +164,25 @@ public class CustomerController implements Initializable {
      * @throws SQLException
      */
     public void onDeleteButtonClick(ActionEvent actionEvent) throws SQLException{
-        Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+        Client selectedClient = customerTableView.getSelectionModel().getSelectedItem();
 
-        if(selectedCustomer != null){
+        if(selectedClient != null){
             messageLabel.setText(null);
 
             if(ControllerHelper.confirmationAlert("Are you sure? " +
                     "Deleting customer will also remove associated appointments!") == ButtonType.YES){
-                int customerId = selectedCustomer.getCustomerId();
+                int customerId = selectedClient.getClientId();
                 for(Appointment appointment : AppointmentDao.getAll()){
-                    if(appointment.getCustomerId() == customerId){
+                    if(appointment.getClientId() == customerId){
                         AppointmentDao.delete(appointment);
                     }
                 }
-                CustomerDao.delete(selectedCustomer);
+                ClientDao.delete(selectedClient);
                 
                 ControllerHelper.messageDisplay("Customer Deleted","Customer with ID, " +
-                        selectedCustomer.getCustomerId() +
-                        ", and name, " + selectedCustomer.getCustomerName() + ", has been deleted");
-                customerTableView.setItems(CustomerDao.getAll());
+                        selectedClient.getClientId() +
+                        ", and name, " + selectedClient.getClientName() + ", has been deleted");
+                customerTableView.setItems(ClientDao.getAll());
             }
         }
         else {
@@ -215,8 +215,8 @@ public class CustomerController implements Initializable {
 
 
         try {
-            customerIdTextField.setText(String.valueOf(customerTableView.getSelectionModel().getSelectedItem().getCustomerId()));
-            nameTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getCustomerName());
+            customerIdTextField.setText(String.valueOf(customerTableView.getSelectionModel().getSelectedItem().getClientId()));
+            nameTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getClientName());
             addressTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getAddress());
             postTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getPostalCode());
             phoneTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getPhone());
@@ -256,12 +256,12 @@ public class CustomerController implements Initializable {
                 messageLabel.setText("Please make sure all fields are completed");
             } else {
                 if (customerIdTextField.getText().isBlank() || customerIdTextField.getText().isEmpty()) {
-                    Customer customer = new Customer(0, name, address, postal, phone, firstLevel.getDivisionId());
-                    CustomerDao.insert(customer);
+                    Client client = new Client(0, name, address, postal, phone, firstLevel.getDivisionId());
+                    ClientDao.insert(client);
                 } else {
                     int customerId = Integer.parseInt(customerIdTextField.getText());
-                    Customer customer = new Customer(customerId, name, address, postal, phone, firstLevel.getDivisionId());
-                    CustomerDao.update(customer);
+                    Client client = new Client(customerId, name, address, postal, phone, firstLevel.getDivisionId());
+                    ClientDao.update(client);
                 }
                 customerIdTextField.clear();
                 nameTextField.clear();
@@ -270,7 +270,7 @@ public class CustomerController implements Initializable {
                 phoneTextField.clear();
                 addRadioButton.fire();
             }
-            customerTableView.setItems(CustomerDao.getAll());
+            customerTableView.setItems(ClientDao.getAll());
         }
         catch(SQLException e){
             messageLabel.setText("All fields must be completed and text fields have character limits");

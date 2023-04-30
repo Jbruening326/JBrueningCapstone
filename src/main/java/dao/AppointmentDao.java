@@ -101,7 +101,7 @@ public abstract class AppointmentDao {
         ps.setString(4, appointment.getType());
         ps.setTimestamp(5, Timestamp.valueOf(appointment.getStartDateTime()));
         ps.setTimestamp(6, Timestamp.valueOf(appointment.getEndDateTime()));
-        ps.setInt(7, appointment.getCustomerId());
+        ps.setInt(7, appointment.getClientId());
         ps.setInt(8, appointment.getUserId());
 
         return ps.executeUpdate();
@@ -126,7 +126,7 @@ public abstract class AppointmentDao {
         ps.setString(4, appointment.getType());
         ps.setTimestamp(5, Timestamp.valueOf(appointment.getStartDateTime()));
         ps.setTimestamp(6, Timestamp.valueOf(appointment.getEndDateTime()));
-        ps.setInt(7, appointment.getCustomerId());
+        ps.setInt(7, appointment.getClientId());
         ps.setInt(8, appointment.getUserId());
         ps.setInt(9, appointment.getAppointmentId());
 

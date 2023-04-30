@@ -6,12 +6,12 @@ import dao.FirstLevelDivisionDao;
 import java.sql.SQLException;
 
 /**
- * This class contains the constructor, getters, setters, and toString() methods of the Customer object.
+ * This class contains the constructor, getters, setters, and toString() methods of the Client object.
  * Author: Joseph Bruening
  */
-public class Customer {
-    private int customerId;
-    private String customerName;
+public abstract class Client {
+    private int clientId;
+    private String clientName;
     private String address;
     private String postalCode;
     private String phone;
@@ -19,17 +19,17 @@ public class Customer {
 
 
     /**
-     * This method is the constructor for the Customer object. When this method is called a new Customer object will be created.
-     * @param customerId The customerId of the Customer object
-     * @param customerName The name of the Customer object
+     * This method is the constructor for the Client object. When this method is called a new Customer object will be created.
+     * @param clientId The customerId of the Customer object
+     * @param clientName The name of the Customer object
      * @param address The address of the Customer object
      * @param postalCode The postal code of the Customer object
      * @param phone The phone number of the Customer object
      * @param divisionId The divisionId of the Customer object
      */
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId) {
-        this.customerId = customerId;
-        this.customerName = customerName;
+    public Client(int clientId, String clientName, String address, String postalCode, String phone, int divisionId) {
+        this.clientId = clientId;
+        this.clientName = clientName;
         this.address = address;
         this.postalCode = postalCode;
         this.phone = phone;
@@ -40,32 +40,32 @@ public class Customer {
      * This is a getter method. This method will get the customerId for the Customer object.
      * @return Returns the customerId for the Customer object.
      */
-    public int getCustomerId() {
-        return customerId;
+    public int getClientId() {
+        return clientId;
     }
 
     /**
      * This is a setter method. This method will set the value of the customerId for a Customer object.
-     * @param customerId The value of which to set the customerId of the Customer object to.
+     * @param clientId The value of which to set the customerId of the Customer object to.
      */
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     /**
      * This is a getter method. This method will get the name for the Customer object.
      * @return Returns the name for the Customer object.
      */
-    public String getCustomerName() {
-        return customerName;
+    public String getClientName() {
+        return clientName;
     }
 
     /**
      * This is a setter method. This method will set the value of the name for a Customer object.
-     * @param customerName The value of which to set the name of the Customer object to.
+     * @param clientName The value of which to set the name of the Customer object to.
      */
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     /**
@@ -159,7 +159,7 @@ public class Customer {
      */
     @Override
     public String toString(){
-        return(Integer.toString(customerId) + " " + customerName);
+        return(Integer.toString(clientId) + " " + clientName);
     }
 
 }

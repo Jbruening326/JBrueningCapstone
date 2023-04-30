@@ -1,8 +1,7 @@
 package controller;
 
 import dao.AppointmentDao;
-import dao.CountryDao;
-import dao.CustomerDao;
+import dao.ClientDao;
 import helper.ControllerHelper;
 import helper.Utilities;
 import javafx.collections.FXCollections;
@@ -10,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.Country;
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * This class contains methods to interact with the "reports.fxml" form. Author: Joseph Bruening
@@ -143,7 +140,7 @@ public class ReportsController implements Initializable {
      */
     public void onCountrySelect(ActionEvent actionEvent) throws SQLException {
         Country country = countryComboBox.getValue();
-        countryResultLabel.setText(String.valueOf(CustomerDao.getCustomersByCountry(country)));
+        countryResultLabel.setText(String.valueOf(ClientDao.getCustomersByCountry(country)));
 
     }
 

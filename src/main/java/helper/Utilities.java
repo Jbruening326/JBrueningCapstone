@@ -142,7 +142,7 @@ public abstract class Utilities {
         boolean isOverlapped = false;
 
         for(Appointment a : AppointmentDao.getAll()){
-            int cId1 = a.getCustomerId();
+            int cId1 = a.getClientId();
             int aId1 = a.getAppointmentId();
             LocalDateTime s1 = a.getStartDateTime();
             LocalDateTime e1 = a.getEndDateTime();

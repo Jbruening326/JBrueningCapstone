@@ -1,7 +1,7 @@
 package controller;
 
 import dao.AppointmentDao;
-import dao.CustomerDao;
+import dao.ClientDao;
 import dao.UserDao;
 import helper.ControllerHelper;
 import helper.Utilities;
@@ -10,7 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import model.Appointment;
-import model.Customer;
+import model.Client;
 import model.User;
 import java.io.IOException;
 import java.net.URL;
@@ -67,7 +67,7 @@ public class UpdateAppointmentController implements Initializable {
     /**
      * Creates a ComboBox object of Customer objects
      */
-    public ComboBox<Customer> customerComboBox;
+    public ComboBox<Client> customerComboBox;
     /**
      * Creates a ComboBox object of User objects
      */
@@ -100,7 +100,7 @@ public class UpdateAppointmentController implements Initializable {
         //Prefill Customer ComboBox
         customerComboBox.getItems();
         try {
-            customerComboBox.setItems(CustomerDao.getAll());
+            customerComboBox.setItems(ClientDao.getAll());
         }
         catch (SQLException e) {
             messageLabel.setText("There are currently no customers or something else went wrong");
@@ -141,7 +141,7 @@ public class UpdateAppointmentController implements Initializable {
         endTimeComboBox.setValue(appointment.getEndDateTime().toLocalTime());
         locationComboBox.setValue(appointment.getLocation());
         typeComboBox.setValue(appointment.getType());
-        customerComboBox.setValue(appointment.getCustomer());
+        customerComboBox.setValue(appointment.getClient());
         userComboBox.setValue(appointment.getUser());
 
     }
@@ -162,7 +162,7 @@ public class UpdateAppointmentController implements Initializable {
             LocalDate date = datePicker.getValue();
             LocalTime start = startTimeComboBox.getValue();
             LocalTime end = endTimeComboBox.getValue();
-            int customer = customerComboBox.getValue().getCustomerId();
+            int customer = customerComboBox.getValue().getClientId();
             int user = userComboBox.getValue().getUserId();
 
             LocalDateTime startDateTime = LocalDateTime.of(date, start);

@@ -1,6 +1,6 @@
 package model;
 
-import dao.CustomerDao;
+import dao.ClientDao;
 import dao.UserDao;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -19,11 +19,11 @@ public class Appointment {
     private String type;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private int customerId;
+    private int clientId;
     private int userId;
 
     /**
-     * This is a contructor method for the Appointment object. When this method is called a new Appointment object is created.
+     * This is a constructor method for the Appointment object. When this method is called a new Appointment object is created.
      * @param appointmentId The appointmentId for the object
      * @param title The title for the object
      * @param description The description for the object
@@ -31,11 +31,11 @@ public class Appointment {
      * @param type The type for the object
      * @param startDateTime The start time for the object
      * @param endDateTime The end time for the object
-     * @param customerId The customerId for the object
+     * @param clientId The customerId for the object
      * @param userId The userId for the object
      */
     public Appointment(int appointmentId, String title, String description, String location, String type,
-                       LocalDateTime startDateTime, LocalDateTime endDateTime, int customerId,
+                       LocalDateTime startDateTime, LocalDateTime endDateTime, int clientId,
                        int userId) {
         this.appointmentId = appointmentId;
         this.title = title;
@@ -44,7 +44,7 @@ public class Appointment {
         this.type = type;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        this.customerId = customerId;
+        this.clientId = clientId;
         this.userId = userId;
     }
 
@@ -164,16 +164,16 @@ public class Appointment {
      * This is a getter method. This method will get the value of the customerId of an Appointment object.
      * @return Returns the customerId of the Appointment object.
      */
-    public int getCustomerId() {
-        return customerId;
+    public int getClientId() {
+        return clientId;
     }
 
     /**
      * This is a setter method. This method will set the value of the customerId of an Appointment object.
-     * @param customerId The value of which to set the customerId of the Appointment object to.
+     * @param clientId The value of which to set the customerId of the Appointment object to.
      */
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     /**
@@ -199,8 +199,8 @@ public class Appointment {
      * @return Returns the Customer object that the Appointment object is associated with
      * @throws SQLException
      */
-    public Customer getCustomer() throws SQLException {
-        return CustomerDao.get(customerId);
+    public Client getClient() throws SQLException {
+        return ClientDao.get(clientId);
     }
 
     /**
