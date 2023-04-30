@@ -50,7 +50,7 @@ public class AddAppointmentController implements Initializable {
     /**
      * Creates a ComboBox object of Customer objects
      */
-    public ComboBox<Client> customerComboBox;
+    public ComboBox<Client> clientComboBox;
     /**
      * Creates a ComboBox object of User objects
      */
@@ -97,12 +97,12 @@ public class AddAppointmentController implements Initializable {
 
 
         //Prefill Customer ComboBox
-        customerComboBox.getItems();
+        clientComboBox.getItems();
         try {
-            customerComboBox.setItems(ClientDao.getAll());
+            clientComboBox.setItems(ClientDao.getAll());
         }
         catch (SQLException e) {
-            messageLabel.setText("There are currently no customers or something else went wrong");
+            messageLabel.setText("There are currently no clients or something else went wrong");
             throw new RuntimeException(e);
         }
 
@@ -142,7 +142,7 @@ public class AddAppointmentController implements Initializable {
            LocalDate date = datePicker.getValue();
            LocalTime start = startTimeComboBox.getValue();
            LocalTime end = endTimeComboBox.getValue();
-           int customer = customerComboBox.getValue().getClientId();
+           int client = clientComboBox.getValue().getClientId();
            int user = userComboBox.getValue().getUserId();
 
            LocalDateTime startDateTime = LocalDateTime.of(date, start);
@@ -150,7 +150,7 @@ public class AddAppointmentController implements Initializable {
 
 
 
-           System.out.println(title + "|" + description + "|" + location + "|" + "|" + type + "|" + date + "|" + start + "|" + end + "|" + customer + "|" + user);
+           System.out.println(title + "|" + description + "|" + location + "|" + "|" + type + "|" + date + "|" + start + "|" + end + "|" + client + "|" + user);
 
            if (title.isEmpty() || title.isBlank() || description.isBlank() || description.isEmpty() ||
                    locationComboBox.getValue() == null || typeComboBox.getValue() == null ||
@@ -169,11 +169,11 @@ public class AddAppointmentController implements Initializable {
             else if (Utilities.toTargetTime(endDateTime).isAfter(LocalDateTime.of(date, LocalTime.of(22, 00)))){
                 messageLabel.setText(("End time not within business hours of 8 am - 10 pm EST"));
            }
-            else if (Utilities.isOverlapped(customer, 0, startDateTime, endDateTime)){
-                messageLabel.setText("Customer with ID: " + customer + " has a scheduling conflict. Please fix times");
+            else if (Utilities.isOverlapped(client, 0, startDateTime, endDateTime)){
+                messageLabel.setText("Customer with ID: " + client + " has a scheduling conflict. Please fix times");
            }
            else {
-               Appointment appointment = new Appointment(0, title, description, location, type, startDateTime, endDateTime, customer, user);
+               Appointment appointment = new Appointment(0, title, description, location, type, startDateTime, endDateTime, client, user);
                AppointmentDao.insert(appointment);
                ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
            }

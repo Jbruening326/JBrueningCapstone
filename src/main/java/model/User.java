@@ -1,5 +1,12 @@
 package model;
 
+import dao.ClientDao;
+import dao.UserDao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.sql.SQLException;
+
 /**
  * This class contains the constructor, getters, setters, and toString() methods of the User object.
  * Author: Joseph Bruening
@@ -8,17 +15,20 @@ public class User {
     private int userId;
     private String userName;
     private String password;
+    private String name;
 
     /**
      * This method is the constructor for the User object. When this method is called a new User object will be created.
      * @param userId The userId of the User object
-     * @param userName The user name of the User object
+     * @param userName The username of the User object
      * @param password The password for the User object
+     * @param name The name for the User object
      */
-    public User(int userId, String userName, String password) {
+    public User(int userId, String userName, String password, String name) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
+        this.name = name;
     }
 
     /**
@@ -69,13 +79,31 @@ public class User {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * This method overrides the toString() method. When this method is called a custom toString() of the User object
      * will be implemented.
      * @return Returns the custom string of the User object
      */
     @Override
-    public String toString(){
-        return(Integer.toString(userId) + " " + userName);
+    public String toString() {
+        return name;
+    }
+
+    public static ObservableList<User> lookupUser (String s) throws SQLException {
+        ObservableList<User> foundUsers = FXCollections.observableArrayList();
+        for(User u : UserDao.getAll()){
+            if(u.getName().contains(s)){
+                foundUsers.add(u);
+            }
+        }
+        return foundUsers;
     }
 }

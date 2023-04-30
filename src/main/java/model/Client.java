@@ -1,8 +1,12 @@
 package model;
 
 
+import dao.ClientDao;
 import dao.CountryDao;
 import dao.FirstLevelDivisionDao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.SQLException;
 
 /**
@@ -160,6 +164,16 @@ public abstract class Client {
     @Override
     public String toString(){
         return(Integer.toString(clientId) + " " + clientName);
+    }
+
+    public static ObservableList<Client> lookupClient (String s) throws SQLException {
+        ObservableList<Client> foundClients = FXCollections.observableArrayList();
+        for(Client c : ClientDao.getAll()){
+            if(c.getClientName().contains(s)){
+                foundClients.add(c);
+            }
+        }
+        return foundClients;
     }
 
 }

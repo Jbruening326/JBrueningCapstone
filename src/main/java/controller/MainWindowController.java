@@ -2,6 +2,7 @@ package controller;
 import dao.AppointmentDao;
 import helper.ControllerHelper;
 import helper.Utilities;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
+import model.Client;
+import model.User;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -105,11 +109,12 @@ public class MainWindowController implements Initializable{
     /**
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
-    public TableColumn<Appointment, Integer> customerIdCol;
+    public TableColumn<Appointment, Integer> clientIdCol;
     /**
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
     public TableColumn<Appointment, Integer> userIdCol;
+    public TextField searchTextField;
 
     /**
      * This method initializes the "mainWindow.fxml" form. When the form is loaded, the table is populated
@@ -129,7 +134,7 @@ public class MainWindowController implements Initializable{
             dateCol.setCellValueFactory(new PropertyValueFactory<>("LocalDate"));
             startCol.setCellValueFactory(new PropertyValueFactory<>("StartTime"));
             endCol.setCellValueFactory(new PropertyValueFactory<>("EndTime"));
-            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("CustomerId"));
+            clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
             userIdCol.setCellValueFactory(new PropertyValueFactory<>("UserId"));
 
         }
@@ -277,12 +282,12 @@ public class MainWindowController implements Initializable{
 
     /**
      * This method changes the form. When the Button object is interacted with, the from will be changed to the
-     * "customer.fxml" form.
+     * "client.fxml" form.
      * @param actionEvent
      * @throws IOException
      */
     public void onCustomersButtonClick(ActionEvent actionEvent) throws IOException {
-        ControllerHelper.changeScene(actionEvent, "customer.fxml", 970, 631);
+        ControllerHelper.changeScene(actionEvent, "client.fxml", 970, 631);
     }
 
     /**
@@ -303,5 +308,26 @@ public class MainWindowController implements Initializable{
      */
     public void onReportsButtonClick(ActionEvent actionEvent) throws IOException {
         ControllerHelper.changeScene(actionEvent, "reports.fxml", 852, 579);
+    }
+
+    public void onSearch(ActionEvent actionEvent) throws SQLException {
+        String searchItem = searchTextField.getText();
+
+        if(searchItem.isEmpty() || searchItem.isBlank()){
+            appointmentsTableView.setItems(AppointmentDao.getAll());
+        }
+        else{
+            ObservableList<Client> foundClients = Client.lookupClient(searchItem);
+            ObservableList<User> foundUsers = User.lookupUser(searchItem);
+            ObservableList<Appointment> foundAppointments = Appointment.searchAppointments(foundClients, foundUsers);
+
+            if (foundClients.size() == 0 && foundUsers.size() == 0){
+                messageLabel.setText("No appointments found");
+            }
+            else{
+               appointmentsTableView.setItems(foundAppointments);
+
+            }
+        }
     }
 }

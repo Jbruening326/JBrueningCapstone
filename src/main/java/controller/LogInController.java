@@ -107,6 +107,7 @@ public class LogInController implements Initializable {
     public void onLoginClick(ActionEvent actionEvent) throws Exception {
         String userName = userNameTextField.getText();
         String password = passwordTextField.getText();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime loginTimeUTC = Utilities.toUTCTime(LocalDateTime.now());
         String loginTime = loginTimeUTC.format(formatter);
@@ -115,7 +116,23 @@ public class LogInController implements Initializable {
         FileWriter fw = new FileWriter(fileName, true);
         PrintWriter outputFile = new PrintWriter(fw);
 
-        if (UserDao.get(userName) != null) {
+        if (UserDao.login(userName, password)){
+            String message = "User, " + userName + ", successfully logged in at " + loginTime + " UTC";
+            Utilities.loginActivity(outputFile, message);
+
+            ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
+
+            FXMLLoader fxmlLoader = ControllerHelper.getFxmlLoader();
+            MainWindowController MWController = fxmlLoader.getController();
+            MWController.previewAppointments();
+        }
+        else {
+            String message2 = "User, " + userName + ", unsuccessfully logged in at  " + loginTime + " UTC";
+            Utilities.loginActivity(outputFile, message2);
+            errorLabel.setText(wrongLogin);
+        }
+
+        /*if (UserDao.get(userName) != null) {
             if (password.equals(UserDao.get(userName).getPassword())){
                 String message = "User, " + userName + ", successfully logged in at " + loginTime + " UTC";
                 Utilities.loginActivity(outputFile, message);
@@ -136,7 +153,7 @@ public class LogInController implements Initializable {
             String message3 = "User, " + userName + ", unsuccessfully logged in at  " + loginTime + " UTC";
             Utilities.loginActivity(outputFile, message3);
             errorLabel.setText(wrongLogin);
-        }
+        }*/
     }
 
     /**

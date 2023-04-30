@@ -14,6 +14,19 @@ import static helper.JDBC.connection;
  */
 public abstract class UserDao {
 
+
+    public static boolean login(String name, String password) throws SQLException{
+        boolean success = false;
+        String sql = "select * FROM appointment_schedule_c868.users where User_Name = ? AND Password = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            success = true;
+        }
+        return success;
+    }
     /**
      * This method retrieves a single user record. When this method is called a single record
      * from the users table will be returned.
@@ -22,16 +35,18 @@ public abstract class UserDao {
      * @throws SQLException
      */
     public static User get(String name) throws SQLException {
-        String sql = "SELECT User_ID, User_Name, Password FROM users  WHERE User_Name = ?";
+        String sql = "SELECT User_ID, User_Name, Name FROM appointment_schedule_c868.users  WHERE User_Name = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, name);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             int userId = rs.getInt("User_ID");
             String userName = rs.getString("User_Name");
-            String password = rs.getString("Password");
+            //String password = rs.getString("Password");
+            String password = "******";
+            String uName = rs.getString("Name");
 
-            User user = new User(userId, userName, password);
+            User user = new User(userId, userName, password, uName);
             return user;
         }
         return null;
@@ -45,17 +60,19 @@ public abstract class UserDao {
      * @throws SQLException
      */
     public static User get(int id) throws SQLException {
-        String sql = "SELECT User_ID, User_Name, Password FROM users  WHERE User_ID = ?";
+        String sql = "SELECT User_ID, User_Name, Name FROM appointment_schedule_c868.users  WHERE User_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             int userId = rs.getInt("User_ID");
             String userName = rs.getString("User_Name");
-            String password = rs.getString("Password");
+            //String password = rs.getString("Password");
+            String password = "******";
+            String name = rs.getString("Name");
 
 
-            User user = new User(userId, userName, password);
+            User user = new User(userId, userName, password, name);
 
             return user;
 
@@ -71,7 +88,7 @@ public abstract class UserDao {
      * @throws SQLException
      */
     public static ObservableList<User> getAll() throws SQLException {
-        String sql = "SELECT User_ID, User_Name, Password FROM users";
+        String sql = "SELECT User_ID, User_Name, Name FROM appointment_schedule_c868.users";
         ObservableList<User> allUsers = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);
@@ -80,9 +97,10 @@ public abstract class UserDao {
         while(rs.next()){
             int userId = rs.getInt("User_ID");
             String userName = rs.getString("User_Name");
-            String password = rs.getString("Password");
+            String password = "********";
+            String name = rs.getString("Name");
 
-            User user = new User(userId, userName, password);
+            User user = new User(userId, userName, password, name);
 
             allUsers.add(user);
 
@@ -119,4 +137,7 @@ public abstract class UserDao {
     public static int delete(User user) throws SQLException {
         return 0;
     }
+
+
+
 }

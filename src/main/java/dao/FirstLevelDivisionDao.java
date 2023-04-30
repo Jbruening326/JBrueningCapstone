@@ -23,7 +23,7 @@ public abstract class FirstLevelDivisionDao {
      */
     public static FirstLevelDivision get(int id) throws SQLException {
         FirstLevelDivision firstDivision = null;
-        String sql = "SELECT Division_ID, Division, Country_ID FROM first_level_divisions  WHERE Division_ID = ?";
+        String sql = "SELECT Division_ID, Division, Country_ID FROM appointment_schedule_c868.first_level_divisions  WHERE Division_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
 
@@ -45,7 +45,7 @@ public abstract class FirstLevelDivisionDao {
      * @throws SQLException
      */
     public static ObservableList<FirstLevelDivision> getAll() throws SQLException {
-        String sql = "SELECT Division_ID, Division, Country_ID FROM first_level_divisions";
+        String sql = "SELECT Division_ID, Division, Country_ID FROM appointment_schedule_c868.first_level_divisions";
         ObservableList<FirstLevelDivision> allDivisions = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);

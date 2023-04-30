@@ -26,8 +26,8 @@ public abstract class AppointmentDao {
      */
     public static Appointment get(int id) throws SQLException {
         Appointment appointment = null;
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID " +
-                "FROM appointments WHERE Appointment_ID = ?";
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Client_ID, User_ID " +
+                "FROM appointment_schedule_c868.appointments WHERE Appointment_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -39,10 +39,10 @@ public abstract class AppointmentDao {
             String type = rs.getString("Type");
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-            int customerId = rs.getInt("Customer_ID");
+            int clientId = rs.getInt("Client_ID");
             int userId = rs.getInt("User_ID");
 
-             appointment = new Appointment(appointmentId, title, description, location, type, start, end, customerId, userId);
+             appointment = new Appointment(appointmentId, title, description, location, type, start, end, clientId, userId);
         }
         return appointment;
 
@@ -55,7 +55,7 @@ public abstract class AppointmentDao {
      * @throws SQLException
      */
     public static ObservableList<Appointment> getAll() throws SQLException {
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID FROM appointments";
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Client_ID, User_ID FROM appointment_schedule_c868.appointments";
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);
@@ -69,11 +69,11 @@ public abstract class AppointmentDao {
             String type = rs.getString("Type");
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-            int customerId = rs.getInt("Customer_ID");
+            int clientId = rs.getInt("Client_ID");
             int userId = rs.getInt("User_ID");
 
             Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                    start, end, customerId, userId);
+                    start, end, clientId, userId);
 
             allAppointments.add(appointment);
 
@@ -91,8 +91,8 @@ public abstract class AppointmentDao {
      * @throws SQLException
      */
     public static int insert(Appointment appointment) throws SQLException {
-        String sql = "INSERT INTO appointments " +
-                "(Title, Description, Location, Type, Start, End, Customer_ID, User_ID) " +
+        String sql = "INSERT INTO appointment_schedule_c868.appointments " +
+                "(Title, Description, Location, Type, Start, End, Client_ID, User_ID) " +
                 "VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, appointment.getTitle());
@@ -117,8 +117,8 @@ public abstract class AppointmentDao {
      */
     public static int update(Appointment appointment) throws SQLException {
 
-        String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, " +
-                "Start = ?, End = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = ? ";
+        String sql = "UPDATE appointment_schedule_c868.appointments SET Title = ?, Description = ?, Location = ?, Type = ?, " +
+                "Start = ?, End = ?, Client_ID = ?, User_ID = ? WHERE Appointment_ID = ? ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, appointment.getTitle());
         ps.setString(2, appointment.getDescription());
@@ -142,7 +142,7 @@ public abstract class AppointmentDao {
      * @throws SQLException
      */
     public static int delete(Appointment appointment) throws SQLException {
-        String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
+        String sql = "DELETE FROM appointment_schedule_c868.appointments WHERE Appointment_ID = ?";
 
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, appointment.getAppointmentId());
@@ -163,7 +163,7 @@ public abstract class AppointmentDao {
 
         Appointment appointment = null;
 
-        String sql = "SELECT * FROM client_schedule.appointments WHERE MONTH(Start) = ? AND Type = ?";
+        String sql = "SELECT * FROM appointment_schedule_c868.appointments WHERE MONTH(Start) = ? AND Type = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, month);
         ps.setString(2, t);
@@ -177,10 +177,10 @@ public abstract class AppointmentDao {
             String type = rs.getString("Type");
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-            int customerId = rs.getInt("Customer_ID");
+            int clientId = rs.getInt("Client_ID");
             int userId = rs.getInt("User_ID");
 
-            appointment = new Appointment(appointmentId, title, description, location, type, start, end, customerId, userId);
+            appointment = new Appointment(appointmentId, title, description, location, type, start, end, clientId, userId);
             appointments.add(appointment);
         }
         return appointments.size();

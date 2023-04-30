@@ -1,7 +1,11 @@
 package model;
 
+import dao.AppointmentDao;
 import dao.ClientDao;
 import dao.UserDao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -235,6 +239,27 @@ public class Appointment {
      */
     public LocalTime getEndTime() {
         return endDateTime.toLocalTime();
+    }
+
+    public static ObservableList<Appointment> searchAppointments (ObservableList<Client> c, ObservableList<User> u) throws SQLException {
+        ObservableList<Appointment> allAppointments = AppointmentDao.getAll();
+        ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+
+        for(int i = 0; i < allAppointments.size(); i++){
+            String clientName = allAppointments.get(i).getClient().getClientName();
+            String name = allAppointments.get(i).getUser().getName();
+            for(int j = 0; j < c.size(); j++){
+                if(c.get(j).getClientName().equals(clientName)){
+                    foundAppointments.add(allAppointments.get(i));
+                }
+            }
+            for(int k = 0; k < u.size(); k++){
+                if(u.get(k).getName().equals(name)){
+                    foundAppointments.add(allAppointments.get(i));
+                }
+            }
+        }
+        return foundAppointments;
     }
 
 

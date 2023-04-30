@@ -69,12 +69,12 @@
             <Label text="Date" GridPane.columnIndex="2" />
             <Label text="Start Time" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="End Time" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="Customer" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="Client" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="User" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <DatePicker fx:id="datePicker" GridPane.columnIndex="3" />
             <ComboBox fx:id="startTimeComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <ComboBox fx:id="endTimeComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <ComboBox fx:id="customerComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <ComboBox fx:id="clientComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
             <ComboBox fx:id="userComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
             <ComboBox fx:id="locationComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>

@@ -2,9 +2,7 @@ package dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Appointment;
-import model.Client;
-import model.Country;
+import model.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,62 +12,76 @@ import java.sql.SQLException;
 import static helper.JDBC.connection;
 
 /**
- * This abstract class contains methods to Create, Read, Update, and Delete Customer objects from the database.
+ * This abstract class contains methods to Create, Read, Update, and Delete Client objects from the database.
  */
 public abstract class ClientDao {
 
     private static ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     /**
-     * This method retrieves a single customer record. When this method is called a single record
-     * from the customers table will be returned.
-     * @param id The Customer_ID  value for the chosen customer record to return.
-     * @return Returns the desired customer record.
+     * This method retrieves a single client record. When this method is called a single record
+     * from the clients table will be returned.
+     * @param id The Client_ID  value for the chosen client record to return.
+     * @return Returns the desired client record.
      * @throws SQLException
      */
     public static Client get(int id) throws SQLException {
         Client client = null;
-        String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, " +
-                "Division_ID FROM customers WHERE Customer_ID = ?";
+        String sql = "SELECT Client_ID, Client_Name, Address, Postal_Code, Phone, " +
+                "Division_ID FROM appointment_schedule_c868.clients WHERE Client_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            int customerId = rs.getInt("Customer_ID");
-            String customerName = rs.getString("Customer_Name");
+            int clientId = rs.getInt("Client_ID");
+            String clientName = rs.getString("Client_Name");
+            String businessName = "Name";
             String address = rs.getString("Address");
             String postalCode = rs.getString("Postal_Code");
             String phone = rs.getString("Phone");
             int divisionId = rs.getInt("Division_ID");
 
-            client = new Client(customerId, customerName, address, postalCode, phone, divisionId);
+            client = new BusinessClient(clientId, clientName, businessName, address, postalCode, phone, divisionId);
         }
         return client;
     }
 
 
     /**
-     * This method retrieves all customer records. When this method is called, all records from the customers
+     * This method retrieves all client records. When this method is called, all records from the clients
      * table will be returned.
-     * @return Returns an observable list of all customer records.
+     * @return Returns an observable list of all client records.
      * @throws SQLException
      */
     public static ObservableList<Client> getAll() throws SQLException {
-        String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
+        String sql = "SELECT c.Client_ID, c.Client_Name, b.Business_Name, p.Product_Description, c.Address, c.Postal_Code, c.Phone, c.Division_ID FROM appointment_schedule_c868.clients c" +
+                " JOIN appointment_schedule_c868.Business_Clients b ON b.Client_ID = c.Client_ID" +
+                " JOIN appointment_schedule_c868.Product_Clients p ON p.Client_ID = c.Client_ID";
         ObservableList<Client> allClients = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);
         ResultSet rs = ps.executeQuery();
 
         while(rs.next()){
-            int customerId = rs.getInt("Customer_ID");
-            String customerName = rs.getString("Customer_Name");
+            Client client;
+
+            int clientId = rs.getInt("Client_ID");
+            String clientName = rs.getString("Client_Name");
+            String businessName = rs. getString("Business_Name");
+            String productDescription = rs.getString("Product_Description");
             String address = rs.getString("Address");
             String postalCode = rs.getString("Postal_Code");
             String phone = rs.getString("Phone");
             int divisionId = rs.getInt("Division_ID");
 
-            Client client = new Client(customerId, customerName, address, postalCode, phone, divisionId);
+            if(businessName != null){
+                client = new BusinessClient(clientId, clientName, businessName, address, postalCode, phone, divisionId);
+            }
+            else{
+                client = new ProductClient(clientId, clientName, productDescription, address, postalCode, phone, divisionId);
+            }
+
+
 
             allClients.add(client);
 
@@ -78,16 +90,27 @@ public abstract class ClientDao {
     }
 
     /**
-     * This method inserts a customer record. When this method is called, a new customer record will be added to the
-     * customers table.
-     * @param client The Customer object that will inserted into the customers table.
+     * This method inserts a client record. When this method is called, a new client record will be added to the
+     * clients table.
+     * @param client The Client object that will inserted into the clients table.
      * @return Returns the number of rows affected.
      * @throws SQLException
      */
     public static int insert(Client client) throws SQLException {
-        String sql = "INSERT INTO customers " +
-                "(Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?,?,?,?,?)";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        /*if(client instanceof BusinessClient){
+            String sql1 = "INSERT INTO business_clients (Business_Name) VALUES(?)";
+             ps = connection.prepareStatement(sql1);
+            ps.setString(1, ((BusinessClient) client).getBusinessName());
+        }
+        else {
+            String sql1 = "INSERT INTO product_clients (Product_Description) VALUES(?)";
+            ps = connection.prepareStatement(sql1);
+            ps.setString(1, ((ProductClient) client).getProductDescription());
+        }*/
+
+        String sql2 = "INSERT INTO appointment_schedule_c868.clients " +
+                "(Client_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?,?,?,?,?)";
+        PreparedStatement ps = connection.prepareStatement(sql2);
         ps.setString(1, client.getClientName());
         ps.setString(2, client.getAddress());
         ps.setString(3, client.getPostalCode());
@@ -98,15 +121,15 @@ public abstract class ClientDao {
     }
 
     /**
-     * This method will update a customer record. When this method is called, a selected customer record from the
-     * customers table will be updated from a Customer object.
-     * @param client The Customer object that will update the existing customer record.
+     * This method will update a client record. When this method is called, a selected client record from the
+     * clients table will be updated from a Client object.
+     * @param client The Client object that will update the existing client record.
      * @return Returns the number of rows affected.
      * @throws SQLException
      */
     public static int update(Client client) throws SQLException {
-        String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, " +
-                "Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
+        String sql = "UPDATE appointment_schedule_c868.clients SET Client_Name = ?, Address = ?, " +
+                "Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Client_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, client.getClientName());
         ps.setString(2, client.getAddress());
@@ -119,14 +142,14 @@ public abstract class ClientDao {
     }
 
     /**
-     * This method will delete customer record. When this method is called, a selected customer record will
-     * be removed from the customers table.
-     * @param client The Customer object that will be deleted from the customers table.
+     * This method will delete client record. When this method is called, a selected client record will
+     * be removed from the clients table.
+     * @param client The Client object that will be deleted from the clients table.
      * @return Returns the number of rows affected.
      * @throws SQLException
      */
     public static int delete(Client client) throws SQLException {
-        String sql = "DELETE FROM customers WHERE Customer_ID = ?";
+        String sql = "DELETE FROM appointment_schedule_c868.clients WHERE Client_ID = ?";
 
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, client.getClientId());
@@ -135,17 +158,17 @@ public abstract class ClientDao {
     }
 
     /**
-     * This method will retrieve the number of customers that belong to a selected country.
-     * When this method is called, the total number of customers that belong to a selected country will be returned
+     * This method will retrieve the number of clients that belong to a selected country.
+     * When this method is called, the total number of clients that belong to a selected country will be returned
      * from a query.
      * @param country The Country object that will be used in the query
-     * @return Returns the size of the list of customers from the results of the query
+     * @return Returns the size of the list of clients from the results of the query
      * @throws SQLException
      */
-    public static int getCustomersByCountry(Country country) throws SQLException {
-        String sql = "SELECT * FROM customers " +
+    public static int getClientsByCountry(Country country) throws SQLException {
+        String sql = "SELECT * FROM appointment_schedule_c868.clients " +
                 "INNER JOIN first_level_divisions " +
-                "ON customers.Division_ID = first_level_divisions.Division_ID " +
+                "ON clients.Division_ID = first_level_divisions.Division_ID " +
                 "WHERE Country_ID =  ?";
 
        ObservableList<Client> allClients = FXCollections.observableArrayList();
@@ -155,14 +178,15 @@ public abstract class ClientDao {
        ResultSet rs = ps.executeQuery();
 
        while(rs.next()){
-           int customerId = rs.getInt("Customer_ID");
-           String customerName = rs.getString("Customer_Name");
+           int clientId = rs.getInt("Client_ID");
+           String clientName = rs.getString("Client_Name");
+           String businessName = "Name";
            String address = rs.getString("Address");
            String postalCode = rs.getString("Postal_Code");
            String phone = rs.getString("Phone");
            int divisionId = rs.getInt("Division_ID");
 
-           Client client = new Client(customerId, customerName, address, postalCode, phone, divisionId);
+           Client client = new BusinessClient(clientId, clientName, businessName, address, postalCode, phone, divisionId);
 
            allClients.add(client);
 

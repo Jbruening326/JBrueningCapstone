@@ -108,10 +108,14 @@ public class ClientController implements Initializable {
      * Creates a TableColumn object
      */
     public TableColumn<Client, String> firstLevelCol;
+    public Label labelClientType;
+    public RadioButton productRadioButton;
+    public RadioButton businessRadioButton;
+    public TextField busTextField;
 
 
     /**
-     * This method initializes the "customer.fxml" form. When the form is loaded,
+     * This method initializes the "client.fxml" form. When the form is loaded,
      * the TableView object will be pre-populated with Customer objects.
      * @param url
      * @param resourceBundle
@@ -197,6 +201,7 @@ public class ClientController implements Initializable {
     public void onAddRadioButtonClick(ActionEvent actionEvent) {
         customerIdTextField.clear();
         nameTextField.clear();
+        busTextField.clear();
         addressTextField.clear();
         postTextField.clear();
         phoneTextField.clear();
@@ -242,7 +247,7 @@ public class ClientController implements Initializable {
      * @throws SQLException
      */
     public void onSaveButtonClick(ActionEvent actionEvent) throws SQLException {
-        try {
+        /*try {
             String name = nameTextField.getText();
             String address = addressTextField.getText();
             String postal = postTextField.getText();
@@ -274,7 +279,7 @@ public class ClientController implements Initializable {
         }
         catch(SQLException e){
             messageLabel.setText("All fields must be completed and text fields have character limits");
-        }
+        }*/
 
     }
 
@@ -287,5 +292,13 @@ public class ClientController implements Initializable {
      */
     public void onBackButtonClick(ActionEvent actionEvent) throws IOException {
         ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
+    }
+
+    public void onBusinessRadioSelect(ActionEvent actionEvent) {
+        labelClientType.setText("Business Client");
+    }
+
+    public void onProductRadioSelect(ActionEvent actionEvent) {
+        labelClientType.setText("Product Description");
     }
 }

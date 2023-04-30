@@ -140,7 +140,7 @@ public class ReportsController implements Initializable {
      */
     public void onCountrySelect(ActionEvent actionEvent) throws SQLException {
         Country country = countryComboBox.getValue();
-        countryResultLabel.setText(String.valueOf(ClientDao.getCustomersByCountry(country)));
+        countryResultLabel.setText(String.valueOf(ClientDao.getClientsByCountry(country)));
 
     }
 

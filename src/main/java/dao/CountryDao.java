@@ -23,7 +23,7 @@ public abstract class CountryDao {
      */
     public static Country get(int id) throws SQLException {
         Country country = null;
-        String sql = "SELECT Country_ID, Country FROM countries  WHERE Country_ID = ?";
+        String sql = "SELECT Country_ID, Country FROM appointment_schedule_c868.countries  WHERE Country_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -44,7 +44,7 @@ public abstract class CountryDao {
      * @throws SQLException
      */
     public static ObservableList<Country> getAll() throws SQLException {
-        String sql = "SELECT Country_ID, Country FROM countries";
+        String sql = "SELECT Country_ID, Country FROM appointment_schedule_c868.countries";
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);
