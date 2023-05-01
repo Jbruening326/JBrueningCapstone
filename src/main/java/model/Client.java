@@ -166,14 +166,6 @@ public abstract class Client {
         return(Integer.toString(clientId) + " " + clientName);
     }
 
-    public static ObservableList<Client> lookupClient (String s) throws SQLException {
-        ObservableList<Client> foundClients = FXCollections.observableArrayList();
-        for(Client c : ClientDao.getAll()){
-            if(c.getClientName().contains(s)){
-                foundClients.add(c);
-            }
-        }
-        return foundClients;
-    }
+
 
 }

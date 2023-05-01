@@ -38,7 +38,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="567.0" spacing="175.0">
                <children>
                   <Button fx:id="reportsButton" mnemonicParsing="false" onAction="#onReportsButtonClick" text="Reports" />
-                  <TextField fx:id="searchTextField" onAction="#onSearch" prefHeight="25.0" prefWidth="197.0" promptText="Search for Client or User" />
+                  <TextField fx:id="searchTextField" onAction="#onSearch" prefHeight="25.0" prefWidth="197.0" promptText="Search for Client" />
                </children>
                <HBox.margin>
                   <Insets right="15.0" />

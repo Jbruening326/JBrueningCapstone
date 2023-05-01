@@ -97,13 +97,4 @@ public class User {
         return name;
     }
 
-    public static ObservableList<User> lookupUser (String s) throws SQLException {
-        ObservableList<User> foundUsers = FXCollections.observableArrayList();
-        for(User u : UserDao.getAll()){
-            if(u.getName().contains(s)){
-                foundUsers.add(u);
-            }
-        }
-        return foundUsers;
-    }
 }

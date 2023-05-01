@@ -2,6 +2,8 @@ package controller;
 
 import dao.AppointmentDao;
 import dao.ClientDao;
+import dao.CountryDao;
+import dao.UserDao;
 import helper.ControllerHelper;
 import helper.Utilities;
 import javafx.collections.FXCollections;
@@ -9,13 +11,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.Country;
+import model.User;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * This class contains methods to interact with the "reports.fxml" form. Author: Joseph Bruening
@@ -81,7 +87,9 @@ public class ReportsController implements Initializable {
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Appointment, Integer >customerIdColumn;
+    public TableColumn<Appointment, Integer >clientIdColumn;
+    public ComboBox<User> userComboBox;
+    public Label userMessageLabel;
 
 
     /**
@@ -101,11 +109,11 @@ public class ReportsController implements Initializable {
         typeComboBox.getItems();
         typeComboBox.setItems(Utilities.getAppointmentTypes());
 
-        /*//Prefill contactComboBox
+        //Prefill userComboBox
         //Change to userComboBox
-        contactComboBox.getItems();
+        userComboBox.getItems();
         try {
-            contactComboBox.setItems(ContactDao.getAll());
+            userComboBox.setItems(UserDao.getAll());
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -118,7 +126,7 @@ public class ReportsController implements Initializable {
         }
         catch(Exception e){
             System.out.println(e.getMessage());
-        }*/
+        }
 
     }
 
@@ -166,6 +174,7 @@ public class ReportsController implements Initializable {
         apptResultLabel.setText(String.valueOf(AppointmentDao.getAppointmentByMonthType(month, t)));
     }
 
+
     /**
      * This method will filter appointments using a <b>lambda</b> on a ComboBox object selection. When the ComboBox object is
      * selected, the lambda expression will be used to filter through all appointments and collect only appointments
@@ -174,17 +183,16 @@ public class ReportsController implements Initializable {
      * @param actionEvent
      * @throws SQLException
      */
-   //Change this to on user select
-    /*public void onContactSelect(ActionEvent actionEvent) throws SQLException {
-        contactMessageLabel.setText(null);
-        int contactId = contactComboBox.getValue().getContactID();
+    public void onUserSelect(ActionEvent actionEvent) throws SQLException {
+        userMessageLabel.setText(null);
+        int userId = userComboBox.getValue().getUserId();
         ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
 
         filteredAppointments = AppointmentDao.getAll().stream()
-                .filter(a -> a.getContactId() == contactId)
+                .filter(a -> a.getUserId() == userId)
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         if(filteredAppointments.isEmpty()){
-            contactMessageLabel.setText("No appointments for selected contact");
+            userMessageLabel.setText("No appointments for selected contact");
         }
         else {
             appointmentTableView.setItems(filteredAppointments);
@@ -194,7 +202,7 @@ public class ReportsController implements Initializable {
             typeColumn.setCellValueFactory(new PropertyValueFactory<>("Type"));
             startColumn.setCellValueFactory(new PropertyValueFactory<>("StartDateTime"));
             endColumn.setCellValueFactory(new PropertyValueFactory<>("EndDateTime"));
-            customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("CustomerId"));
+            clientIdColumn.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
         }
-    }*/
+    }
 }

@@ -44,14 +44,14 @@
                      <children>
                         <ComboBox fx:id="monthComboBox" onAction="#onMonthSelect" prefHeight="25.0" prefWidth="135.0" promptText="Select a month" GridPane.columnIndex="1" />
                         <ComboBox fx:id="typeComboBox" disable="true" onAction="#onTypeSelect" prefWidth="150.0" promptText="Select a type" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="contactComboBox" onAction="#onContactSelect" prefWidth="150.0" promptText="Select a contact" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="userComboBox" onAction="#onUserSelect" prefWidth="150.0" promptText="Select a user" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Appointments by month and type" />
-                        <Label text="Contact schedule" GridPane.rowIndex="2" />
-                        <Label text="Customer by Country" GridPane.rowIndex="1" />
+                        <Label text="User schedule" GridPane.rowIndex="2" />
+                        <Label text="Client by Country" GridPane.rowIndex="1" />
                         <ComboBox fx:id="countryComboBox" onAction="#onCountrySelect" prefWidth="150.0" promptText="Select a country" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="apptResultLabel" prefHeight="17.0" prefWidth="166.0" GridPane.columnIndex="3" />
                         <Label fx:id="countryResultLabel" prefHeight="17.0" prefWidth="167.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label fx:id="contactMessageLabel" prefHeight="17.0" prefWidth="223.0" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="userMessageLabel" prefHeight="17.0" prefWidth="223.0" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets left="10.0" />
@@ -67,7 +67,7 @@
                               <TableColumn fx:id="descriptionColumn" prefWidth="117.0" text="Description" />
                               <TableColumn fx:id="startColumn" prefWidth="117.0" text="Appointment_Start" />
                               <TableColumn fx:id="endColumn" prefWidth="112.0" text="Appointment_End" />
-                              <TableColumn fx:id="customerIdColumn" prefWidth="79.0" text="Customer_ID" />
+                              <TableColumn fx:id="clientIdColumn" prefWidth="79.0" text="Client_ID" />
                           </columns>
                         </TableView>
                      </children>

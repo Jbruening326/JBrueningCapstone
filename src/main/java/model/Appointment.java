@@ -241,25 +241,16 @@ public class Appointment {
         return endDateTime.toLocalTime();
     }
 
-    public static ObservableList<Appointment> searchAppointments (ObservableList<Client> c, ObservableList<User> u) throws SQLException {
-        ObservableList<Appointment> allAppointments = AppointmentDao.getAll();
-        ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+    public static ObservableList<Appointment> findAppointmentByClient (String s) throws SQLException {
+        ObservableList<Appointment> foundAppointment = FXCollections.observableArrayList();
 
-        for(int i = 0; i < allAppointments.size(); i++){
-            String clientName = allAppointments.get(i).getClient().getClientName();
-            String name = allAppointments.get(i).getUser().getName();
-            for(int j = 0; j < c.size(); j++){
-                if(c.get(j).getClientName().equals(clientName)){
-                    foundAppointments.add(allAppointments.get(i));
-                }
-            }
-            for(int k = 0; k < u.size(); k++){
-                if(u.get(k).getName().equals(name)){
-                    foundAppointments.add(allAppointments.get(i));
-                }
+        for(Appointment a : AppointmentDao.getAll()){
+            String tempName = a.getClient().getClientName().toUpperCase();
+            if(tempName.contains(s)){
+                foundAppointment.add(a);
             }
         }
-        return foundAppointments;
+        return foundAppointment;
     }
 
 

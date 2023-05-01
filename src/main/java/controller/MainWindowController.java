@@ -311,18 +311,19 @@ public class MainWindowController implements Initializable{
     }
 
     public void onSearch(ActionEvent actionEvent) throws SQLException {
-        String searchItem = searchTextField.getText();
+        messageLabel.setText(null);
+        String searchItem = searchTextField.getText().toUpperCase();
 
         if(searchItem.isEmpty() || searchItem.isBlank()){
             appointmentsTableView.setItems(AppointmentDao.getAll());
         }
         else{
-            ObservableList<Client> foundClients = Client.lookupClient(searchItem);
-            ObservableList<User> foundUsers = User.lookupUser(searchItem);
-            ObservableList<Appointment> foundAppointments = Appointment.searchAppointments(foundClients, foundUsers);
 
-            if (foundClients.size() == 0 && foundUsers.size() == 0){
+            ObservableList<Appointment> foundAppointments = Appointment.findAppointmentByClient(searchItem);
+
+            if (foundAppointments.size() == 0){
                 messageLabel.setText("No appointments found");
+                appointmentsTableView.setItems(AppointmentDao.getAll());
             }
             else{
                appointmentsTableView.setItems(foundAppointments);
