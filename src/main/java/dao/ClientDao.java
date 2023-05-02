@@ -27,7 +27,7 @@ public abstract class ClientDao {
      */
     public static Client get(int id) throws SQLException {
         Client client = null;
-        String sql = "SELECT Client_ID, Client_Name, Address, Postal_Code, Phone, " +
+        String sql = "SELECT Client_ID, Client_Name, Business,Name, Product_Description, Address, Postal_Code, Phone, " +
                 "Division_ID FROM appointment_schedule_c868.clients WHERE Client_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
@@ -35,13 +35,20 @@ public abstract class ClientDao {
         while (rs.next()) {
             int clientId = rs.getInt("Client_ID");
             String clientName = rs.getString("Client_Name");
-            String businessName = "Name";
+            String businessName = rs.getString("Business_Name");
+            String productDescription = rs.getString("Product_Description");
             String address = rs.getString("Address");
             String postalCode = rs.getString("Postal_Code");
             String phone = rs.getString("Phone");
             int divisionId = rs.getInt("Division_ID");
 
-            client = new BusinessClient(clientId, clientName, businessName, address, postalCode, phone, divisionId);
+            if(businessName != null){
+                client = new BusinessClient(clientId, clientName, businessName, address, postalCode, phone, divisionId);
+            }
+            else {
+                client = new ProductClient(clientId, clientName, productDescription, address, postalCode, phone, divisionId);
+            }
+
         }
         return client;
     }
@@ -54,9 +61,8 @@ public abstract class ClientDao {
      * @throws SQLException
      */
     public static ObservableList<Client> getAll() throws SQLException {
-        String sql = "SELECT c.Client_ID, c.Client_Name, b.Business_Name, p.Product_Description, c.Address, c.Postal_Code, c.Phone, c.Division_ID FROM appointment_schedule_c868.clients c" +
-                " JOIN appointment_schedule_c868.Business_Clients b ON b.Client_ID = c.Client_ID" +
-                " JOIN appointment_schedule_c868.Product_Clients p ON p.Client_ID = c.Client_ID";
+        String sql = "SELECT Client_ID, Client_Name, Business_Name, Product_Description, Address, Postal_Code, " +
+                "Phone, Division_ID FROM appointment_schedule_c868.clients";
         ObservableList<Client> allClients = FXCollections.observableArrayList();
 
         PreparedStatement ps = connection.prepareCall(sql);
@@ -97,27 +103,31 @@ public abstract class ClientDao {
      * @throws SQLException
      */
     public static int insert(Client client) throws SQLException {
-        /*if(client instanceof BusinessClient){
-            String sql1 = "INSERT INTO business_clients (Business_Name) VALUES(?)";
-             ps = connection.prepareStatement(sql1);
-            ps.setString(1, ((BusinessClient) client).getBusinessName());
+        if (client instanceof BusinessClient){
+            String sql = "INSERT INTO appointment_schedule_c868.clients (Client_Name, Business_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?,?,?,?,?,?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, client.getClientName());
+            ps.setString(2, ((BusinessClient) client).getBusinessName());
+            ps.setString(3, client.getAddress());
+            ps.setString(4, client.getPostalCode());
+            ps.setString(5, client.getPhone());
+            ps.setInt(6, client.getDivisionId());
+
+            return ps.executeUpdate();
         }
-        else {
-            String sql1 = "INSERT INTO product_clients (Product_Description) VALUES(?)";
-            ps = connection.prepareStatement(sql1);
-            ps.setString(1, ((ProductClient) client).getProductDescription());
-        }*/
+        else{
+            String sql = "INSERT INTO appointment_schedule_c868.clients (Client_Name, Product_Description, Address, Postal_Code, Phone, Division_ID) VALUES(?,?,?,?,?,?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, client.getClientName());
+            ps.setString(2, ((ProductClient) client).getProductDescription());
+            ps.setString(3, client.getAddress());
+            ps.setString(4, client.getPostalCode());
+            ps.setString(5, client.getPhone());
+            ps.setInt(6, client.getDivisionId());
 
-        String sql2 = "INSERT INTO appointment_schedule_c868.clients " +
-                "(Client_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?,?,?,?,?)";
-        PreparedStatement ps = connection.prepareStatement(sql2);
-        ps.setString(1, client.getClientName());
-        ps.setString(2, client.getAddress());
-        ps.setString(3, client.getPostalCode());
-        ps.setString(4, client.getPhone());
-        ps.setInt(5, client.getDivisionId());
+            return ps.executeUpdate();
+        }
 
-        return ps.executeUpdate();
     }
 
     /**
@@ -128,17 +138,37 @@ public abstract class ClientDao {
      * @throws SQLException
      */
     public static int update(Client client) throws SQLException {
-        String sql = "UPDATE appointment_schedule_c868.clients SET Client_Name = ?, Address = ?, " +
-                "Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Client_ID = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, client.getClientName());
-        ps.setString(2, client.getAddress());
-        ps.setString(3, client.getPostalCode());
-        ps.setString(4, client.getPhone());
-        ps.setInt(5, client.getDivisionId());
-        ps.setInt(6, client.getClientId());
+        if (client instanceof BusinessClient){
+            String sql = "UPDATE appointment_schedule_c868.clients SET Client_Name = ?, Business_Name = ?, Product_Description = ? " +
+                    "Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Client_ID = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, client.getClientName());
+            ps.setString(2, ((BusinessClient) client).getBusinessName());
+            ps.setString(3, null);
+            ps.setString(4, client.getAddress());
+            ps.setString(5, client.getPostalCode());
+            ps.setString(6, client.getPhone());
+            ps.setInt(7, client.getDivisionId());
+            ps.setInt(8, client.getClientId());
 
-        return ps.executeUpdate();
+            return ps.executeUpdate();
+        }
+        else{
+            String sql = "UPDATE appointment_schedule_c868.clients SET Client_Name = ?, Business_Name = ?, Product_Description = ?, " +
+                    "Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Client_ID = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, client.getClientName());
+            ps.setString(2, null);
+            ps.setString(3, ((ProductClient) client).getProductDescription());
+            ps.setString(4, client.getAddress());
+            ps.setString(5, client.getPostalCode());
+            ps.setString(6, client.getPhone());
+            ps.setInt(7, client.getDivisionId());
+            ps.setInt(8, client.getClientId());
+
+            return ps.executeUpdate();
+        }
+
     }
 
     /**

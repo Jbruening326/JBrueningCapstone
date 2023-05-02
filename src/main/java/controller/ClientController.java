@@ -79,11 +79,11 @@ public class ClientController implements Initializable {
     /**
      * Creates a TableView object of Customer objects
      */
-    public TableView<Client> customerTableView;
+    public TableView<Client> clientTableView;
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Client, Integer> customerIdCol;
+    public TableColumn<Client, Integer> clientIdCol;
     /**
      * Creates a TableColumn object
      */
@@ -122,8 +122,8 @@ public class ClientController implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            customerTableView.setItems(ClientDao.getAll());
-            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("CustomerId"));
+            clientTableView.setItems(ClientDao.getAll());
+            clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
             nameCol.setCellValueFactory(new PropertyValueFactory<>("CustomerName"));
             addressCol.setCellValueFactory(new PropertyValueFactory<>("Address"));
             postalCol.setCellValueFactory(new PropertyValueFactory<>("PostalCode"));
@@ -168,25 +168,25 @@ public class ClientController implements Initializable {
      * @throws SQLException
      */
     public void onDeleteButtonClick(ActionEvent actionEvent) throws SQLException{
-        Client selectedClient = customerTableView.getSelectionModel().getSelectedItem();
+        Client selectedClient = clientTableView.getSelectionModel().getSelectedItem();
 
         if(selectedClient != null){
             messageLabel.setText(null);
 
             if(ControllerHelper.confirmationAlert("Are you sure? " +
                     "Deleting customer will also remove associated appointments!") == ButtonType.YES){
-                int customerId = selectedClient.getClientId();
+                int clientId = selectedClient.getClientId();
                 for(Appointment appointment : AppointmentDao.getAll()){
-                    if(appointment.getClientId() == customerId){
+                    if(appointment.getClientId() == clientId){
                         AppointmentDao.delete(appointment);
                     }
                 }
                 ClientDao.delete(selectedClient);
                 
-                ControllerHelper.messageDisplay("Customer Deleted","Customer with ID, " +
+                ControllerHelper.messageDisplay("Client Deleted","Client with ID, " +
                         selectedClient.getClientId() +
                         ", and name, " + selectedClient.getClientName() + ", has been deleted");
-                customerTableView.setItems(ClientDao.getAll());
+                clientTableView.setItems(ClientDao.getAll());
             }
         }
         else {
@@ -209,24 +209,26 @@ public class ClientController implements Initializable {
         saveButton.setText("Save");
     }
 
+   //**************************************************************************************************************
     /**
      * This method will populate Customer object data into the form. When the RadioButton object is selected,
      * a selected Customer object data will be populated into the form fields and ComboBox object.
      * @param actionEvent
      * @throws Exception
      */
-    public void onUpdateRadioButtonClick(ActionEvent actionEvent) throws Exception {
+   /* public void onUpdateRadioButtonClick(ActionEvent actionEvent) throws Exception {
         messageLabel.setText(null);
 
 
         try {
-            customerIdTextField.setText(String.valueOf(customerTableView.getSelectionModel().getSelectedItem().getClientId()));
-            nameTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getClientName());
-            addressTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getAddress());
-            postTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getPostalCode());
-            phoneTextField.setText(customerTableView.getSelectionModel().getSelectedItem().getPhone());
-            countryComboBox.setValue(customerTableView.getSelectionModel().getSelectedItem().getCountry());
-            firstLevelComboBox.setValue(customerTableView.getSelectionModel().getSelectedItem().getDivision());
+            customerIdTextField.setText(String.valueOf(clientTableView.getSelectionModel().getSelectedItem().getClientId()));
+            nameTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getClientName());
+            busTextField.set
+            addressTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getAddress());
+            postTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getPostalCode());
+            phoneTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getPhone());
+            countryComboBox.setValue(clientTableView.getSelectionModel().getSelectedItem().getCountry());
+            firstLevelComboBox.setValue(clientTableView.getSelectionModel().getSelectedItem().getDivision());
 
             saveButton.setText("Update");
         }
@@ -235,9 +237,8 @@ public class ClientController implements Initializable {
             addRadioButton.fire();
         }
 
-
-
-    }
+    }*/
+    //*****************************************************************************************************************************
 
     /**
      * This method will create or update Customer objects. When the save/update Button object is interacted with.,
@@ -282,7 +283,7 @@ public class ClientController implements Initializable {
         }*/
 
     }
-
+//**************************************************************************************************************************
 
     /**
      * This method launch a another form. When the user interacts with the Button object,
@@ -293,11 +294,11 @@ public class ClientController implements Initializable {
     public void onBackButtonClick(ActionEvent actionEvent) throws IOException {
         ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
     }
-
+//*********************************************************************************************************************
     public void onBusinessRadioSelect(ActionEvent actionEvent) {
         labelClientType.setText("Business Client");
     }
-
+//************************************************************************************************************************
     public void onProductRadioSelect(ActionEvent actionEvent) {
         labelClientType.setText("Product Description");
     }

@@ -92,9 +92,9 @@
             <VBox prefHeight="372.0" prefWidth="556.0" spacing="10.0">
                <children>
                   <Label text="Client Table" />
-                  <TableView fx:id="customerTableView" prefHeight="245.0" prefWidth="487.0">
+                  <TableView fx:id="clientTableView" prefHeight="245.0" prefWidth="487.0">
                      <columns>
-                        <TableColumn fx:id="customerIdCol" text="Client ID" />
+                        <TableColumn fx:id="clientIdCol" text="Client ID" />
                         <TableColumn fx:id="nameCol" prefWidth="83.0" text="Name" />
                         <TableColumn fx:id="addressCol" prefWidth="54.0" text="Address" />
                         <TableColumn fx:id="postalCol" prefWidth="75.0" text="Postal Code" />
