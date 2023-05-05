@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * This class contains contractor, getters and setters for an Appointment object
@@ -251,6 +252,18 @@ public class Appointment {
             }
         }
         return foundAppointment;
+    }
+
+    /**
+     * This is a getter method. This method will get the value of the clienttName of an Appointment object.
+     * @return Returns the clientName of the Appointment object.
+     */
+    public String getClientName() throws SQLException{
+        return ClientDao.get(clientId).getClientName();
+    }
+
+    public String getUserName() throws SQLException {
+        return UserDao.get(userId).getName();
     }
 
 

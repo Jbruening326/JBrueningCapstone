@@ -52,7 +52,7 @@ public class MainWindowController implements Initializable{
     /**
      * Creates a Button object for a Customers button
      */
-    public Button customersButton;
+    public Button clientsButton;
     /**
      * Creates a Button object for a Reports button
      */
@@ -86,10 +86,7 @@ public class MainWindowController implements Initializable{
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
     public TableColumn<Appointment, String> locCol;
-    /**
-     * Creates a TableColumn object for an Appointment object field to be displayed in
-     */
-    public TableColumn<Appointment, String> contCol;
+
     /**
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
@@ -109,11 +106,11 @@ public class MainWindowController implements Initializable{
     /**
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
-    public TableColumn<Appointment, Integer> clientIdCol;
+    public TableColumn<Appointment, String> clientIdCol;
     /**
      * Creates a TableColumn object for an Appointment object field to be displayed in
      */
-    public TableColumn<Appointment, Integer> userIdCol;
+    public TableColumn<Appointment, String> userIdCol;
     public TextField searchTextField;
 
     /**
@@ -134,8 +131,8 @@ public class MainWindowController implements Initializable{
             dateCol.setCellValueFactory(new PropertyValueFactory<>("LocalDate"));
             startCol.setCellValueFactory(new PropertyValueFactory<>("StartTime"));
             endCol.setCellValueFactory(new PropertyValueFactory<>("EndTime"));
-            clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
-            userIdCol.setCellValueFactory(new PropertyValueFactory<>("UserId"));
+            clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientName"));
+            userIdCol.setCellValueFactory(new PropertyValueFactory<>("UserName"));
 
         }
         catch(Exception e){
@@ -286,7 +283,7 @@ public class MainWindowController implements Initializable{
      * @param actionEvent
      * @throws IOException
      */
-    public void onCustomersButtonClick(ActionEvent actionEvent) throws IOException {
+    public void onClientsButtonClick(ActionEvent actionEvent) throws IOException {
         ControllerHelper.changeScene(actionEvent, "client.fxml", 970, 631);
     }
 

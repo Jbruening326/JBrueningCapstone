@@ -27,7 +27,7 @@ public abstract class ClientDao {
      */
     public static Client get(int id) throws SQLException {
         Client client = null;
-        String sql = "SELECT Client_ID, Client_Name, Business,Name, Product_Description, Address, Postal_Code, Phone, " +
+        String sql = "SELECT Client_ID, Client_Name, Business_Name, Product_Description, Address, Postal_Code, Phone, " +
                 "Division_ID FROM appointment_schedule_c868.clients WHERE Client_ID = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);

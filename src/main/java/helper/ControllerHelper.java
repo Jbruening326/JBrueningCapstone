@@ -38,7 +38,7 @@ public abstract class ControllerHelper {
             fxmlLoader = new FXMLLoader(Main.class.getResource(fxmlName));
             stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), width, height);
-            stage.setTitle("Login Application");
+            stage.setTitle("Handcraft Consulting");
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {

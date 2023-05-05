@@ -47,10 +47,7 @@ public class AddAppointmentController implements Initializable {
      * Creates a ComboBox object of LocalTime objects
      */
     public ComboBox<LocalTime> endTimeComboBox;
-    /**
-     * Creates a ComboBox object of Customer objects
-     */
-    public ComboBox<Client> clientComboBox;
+
     /**
      * Creates a ComboBox object of User objects
      */
@@ -75,6 +72,7 @@ public class AddAppointmentController implements Initializable {
      * Creates a DatePicker object
      */
     public DatePicker datePicker;
+    public ComboBox<Client> clientCombo;
 
 
     /**
@@ -96,10 +94,10 @@ public class AddAppointmentController implements Initializable {
         typeComboBox.setItems(Utilities.getAppointmentTypes());
 
 
-        //Prefill Customer ComboBox
-        clientComboBox.getItems();
+        //Prefill Client ComboBox
+        clientCombo.getItems();
         try {
-            clientComboBox.setItems(ClientDao.getAll());
+            clientCombo.setItems(ClientDao.getAll());
         }
         catch (SQLException e) {
             messageLabel.setText("There are currently no clients or something else went wrong");
@@ -142,7 +140,7 @@ public class AddAppointmentController implements Initializable {
            LocalDate date = datePicker.getValue();
            LocalTime start = startTimeComboBox.getValue();
            LocalTime end = endTimeComboBox.getValue();
-           int client = clientComboBox.getValue().getClientId();
+           int client = clientCombo.getValue().getClientId();
            int user = userComboBox.getValue().getUserId();
 
            LocalDateTime startDateTime = LocalDateTime.of(date, start);

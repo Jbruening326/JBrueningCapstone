@@ -15,6 +15,7 @@ import model.User;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -64,10 +65,7 @@ public class UpdateAppointmentController implements Initializable {
      * Creates a ComboBox object of LocalTime objects
      */
     public ComboBox<LocalTime> endTimeComboBox;
-    /**
-     * Creates a ComboBox object of Customer objects
-     */
-    public ComboBox<Client> customerComboBox;
+
     /**
      * Creates a ComboBox object of User objects
      */
@@ -76,6 +74,7 @@ public class UpdateAppointmentController implements Initializable {
      * Creates a ComboBox object of Strings
      */
     public ComboBox<String> locationComboBox;
+    public ComboBox<Client> clientCombo;
 
 
     /**
@@ -97,13 +96,14 @@ public class UpdateAppointmentController implements Initializable {
         typeComboBox.setItems(Utilities.getAppointmentTypes());
 
 
-        //Prefill Customer ComboBox
-        customerComboBox.getItems();
-        try {
-            customerComboBox.setItems(ClientDao.getAll());
+        //Prefill Client ComboBox
+
+        clientCombo.getItems();
+        try{
+            clientCombo.setItems(ClientDao.getAll());
         }
-        catch (SQLException e) {
-            messageLabel.setText("There are currently no customers or something else went wrong");
+        catch (SQLException e){
+            messageLabel.setText("There are currently no clients or something else went wrong");
             throw new RuntimeException(e);
         }
 
@@ -141,7 +141,7 @@ public class UpdateAppointmentController implements Initializable {
         endTimeComboBox.setValue(appointment.getEndDateTime().toLocalTime());
         locationComboBox.setValue(appointment.getLocation());
         typeComboBox.setValue(appointment.getType());
-        customerComboBox.setValue(appointment.getClient());
+        clientCombo.setValue(appointment.getClient());
         userComboBox.setValue(appointment.getUser());
 
     }
@@ -162,13 +162,13 @@ public class UpdateAppointmentController implements Initializable {
             LocalDate date = datePicker.getValue();
             LocalTime start = startTimeComboBox.getValue();
             LocalTime end = endTimeComboBox.getValue();
-            int customer = customerComboBox.getValue().getClientId();
+            int client = clientCombo.getValue().getClientId();
             int user = userComboBox.getValue().getUserId();
 
             LocalDateTime startDateTime = LocalDateTime.of(date, start);
             LocalDateTime endDateTime = LocalDateTime.of(date, end);
 
-            System.out.println(title + "|" + description + "|" + location + "|" + "|" + type + "|" + date + "|" + start + "|" + end + "|" + customer + "|" + user);
+            System.out.println(title + "|" + description + "|" + location + "|" + "|" + type + "|" + date + "|" + start + "|" + end + "|" + client + "|" + user);
 
             if (title.isEmpty() || title.isBlank() || description.isBlank() || description.isEmpty() ||
                     locationComboBox.getValue() == null || typeComboBox.getValue() == null ||
@@ -187,11 +187,11 @@ public class UpdateAppointmentController implements Initializable {
             else if (Utilities.toTargetTime(endDateTime).isAfter(LocalDateTime.of(date, LocalTime.of(22, 00)))) {
                 messageLabel.setText(("End time not within business hours of 8 am - 10 pm EST"));
             }
-            else if (Utilities.isOverlapped(customer, appointmentId, startDateTime, endDateTime)){
-                messageLabel.setText("Customer with ID: " + customer + " has a scheduling conflict. Please fix times");
+            else if (Utilities.isOverlapped(client, appointmentId, startDateTime, endDateTime)){
+                messageLabel.setText("Customer with ID: " + client + " has a scheduling conflict. Please fix times");
             }
             else {
-                Appointment appointment = new Appointment(appointmentId, title, description, location, type, startDateTime, endDateTime, customer, user);
+                Appointment appointment = new Appointment(appointmentId, title, description, location, type, startDateTime, endDateTime, client, user);
                 AppointmentDao.update(appointment);
                 ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
             }

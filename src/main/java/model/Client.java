@@ -163,7 +163,7 @@ public abstract class Client {
      */
     @Override
     public String toString(){
-        return(Integer.toString(clientId) + " " + clientName);
+        return clientName;
     }
 
 
