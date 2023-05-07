@@ -147,9 +147,6 @@ public class AddAppointmentController implements Initializable {
            LocalDateTime endDateTime = LocalDateTime.of(date, end);
 
 
-
-           System.out.println(title + "|" + description + "|" + location + "|" + "|" + type + "|" + date + "|" + start + "|" + end + "|" + client + "|" + user);
-
            if (title.isEmpty() || title.isBlank() || description.isBlank() || description.isEmpty() ||
                    locationComboBox.getValue() == null || typeComboBox.getValue() == null ||
                    startTimeComboBox.getValue() == null || endTimeComboBox.getValue() == null){

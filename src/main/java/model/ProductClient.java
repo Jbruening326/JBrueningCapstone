@@ -27,8 +27,4 @@ public class ProductClient extends Client{
         this.productDescription = productDescription;
     }
 
-    @Override
-    public String toString() {
-        return productDescription;
-    }
 }

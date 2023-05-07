@@ -61,8 +61,8 @@
                   <TableColumn fx:id="dateCol" prefWidth="90.0" text="Date" />
                   <TableColumn fx:id="startCol" prefWidth="70.0" text="Start Time" />
                   <TableColumn fx:id="endCol" prefWidth="68.0" text="End Time" />
-                  <TableColumn fx:id="clientIdCol" prefWidth="99.0" text="Client_ID" />
-                  <TableColumn fx:id="userIdCol" prefWidth="98.0" text="User_ID" />
+                  <TableColumn fx:id="clientIdCol" prefWidth="99.0" text="Client" />
+                  <TableColumn fx:id="userIdCol" prefWidth="98.0" text="User" />
                </columns></TableView>
          </children>
       </HBox>

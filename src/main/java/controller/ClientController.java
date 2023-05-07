@@ -11,10 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Appointment;
-import model.Client;
-import model.Country;
-import model.FirstLevelDivision;
+import javafx.scene.input.MouseEvent;
+import model.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -51,7 +50,7 @@ public class ClientController implements Initializable {
     /**
      * Creates a TextField object
      */
-    public TextField customerIdTextField;
+    public TextField clientIdTextField;
     /**
      * Creates a TextField object
      */
@@ -83,7 +82,7 @@ public class ClientController implements Initializable {
     /**
      * Creates a TableColumn object
      */
-    public TableColumn<Client, Integer> clientIdCol;
+    //public TableColumn<Client, Integer> clientIdCol;
     /**
      * Creates a TableColumn object
      */
@@ -114,6 +113,7 @@ public class ClientController implements Initializable {
     public TextField busTextField;
 
 
+
     /**
      * This method initializes the "client.fxml" form. When the form is loaded,
      * the TableView object will be pre-populated with Customer objects.
@@ -121,15 +121,18 @@ public class ClientController implements Initializable {
      * @param resourceBundle
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         try {
             clientTableView.setItems(ClientDao.getAll());
-            clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
-            nameCol.setCellValueFactory(new PropertyValueFactory<>("CustomerName"));
+            //clientIdCol.setCellValueFactory(new PropertyValueFactory<>("ClientId"));
+            nameCol.setCellValueFactory(new PropertyValueFactory<>("ClientName"));
             addressCol.setCellValueFactory(new PropertyValueFactory<>("Address"));
             postalCol.setCellValueFactory(new PropertyValueFactory<>("PostalCode"));
             phoneCol.setCellValueFactory(new PropertyValueFactory<>("Phone"));
             countryCol.setCellValueFactory(new PropertyValueFactory<>("Country"));
             firstLevelCol.setCellValueFactory(new PropertyValueFactory<>("Division"));
+
+
 
             countryComboBox.getItems();
             countryComboBox.setItems(CountryDao.getAll());
@@ -160,6 +163,7 @@ public class ClientController implements Initializable {
         }
         firstLevelComboBox.setItems(firstLevelDivision);
     }
+
 
     /**
      * This method will delete a selected Customer object. When the delete Button object is interacted with,
@@ -199,7 +203,7 @@ public class ClientController implements Initializable {
      * @param actionEvent
      */
     public void onAddRadioButtonClick(ActionEvent actionEvent) {
-        customerIdTextField.clear();
+        clientIdTextField.clear();
         nameTextField.clear();
         busTextField.clear();
         addressTextField.clear();
@@ -209,26 +213,35 @@ public class ClientController implements Initializable {
         saveButton.setText("Save");
     }
 
-   //**************************************************************************************************************
     /**
      * This method will populate Customer object data into the form. When the RadioButton object is selected,
      * a selected Customer object data will be populated into the form fields and ComboBox object.
      * @param actionEvent
      * @throws Exception
      */
-   /* public void onUpdateRadioButtonClick(ActionEvent actionEvent) throws Exception {
+    public void onUpdateRadioButtonClick(ActionEvent actionEvent) throws Exception {
         messageLabel.setText(null);
 
-
         try {
-            customerIdTextField.setText(String.valueOf(clientTableView.getSelectionModel().getSelectedItem().getClientId()));
-            nameTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getClientName());
-            busTextField.set
-            addressTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getAddress());
-            postTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getPostalCode());
-            phoneTextField.setText(clientTableView.getSelectionModel().getSelectedItem().getPhone());
-            countryComboBox.setValue(clientTableView.getSelectionModel().getSelectedItem().getCountry());
-            firstLevelComboBox.setValue(clientTableView.getSelectionModel().getSelectedItem().getDivision());
+            Client c = clientTableView.getSelectionModel().getSelectedItem();
+            System.out.println(c.getClass());
+            if(c instanceof BusinessClient){
+                businessRadioButton.fire();
+                labelClientType.setText("Business Name");
+                busTextField.setText(((BusinessClient) c).getBusinessName());
+            }
+            else {
+                productRadioButton.fire();
+                labelClientType.setText("Product Description");
+                busTextField.setText(((ProductClient) c).getProductDescription());
+            }
+            clientIdTextField.setText(String.valueOf(c.getClientId()));
+            nameTextField.setText(c.getClientName());
+            addressTextField.setText(c.getAddress());
+            postTextField.setText(c.getPostalCode());
+            phoneTextField.setText(c.getPhone());
+            countryComboBox.setValue(c.getCountry());
+            firstLevelComboBox.setValue(c.getDivision());
 
             saveButton.setText("Update");
         }
@@ -237,8 +250,7 @@ public class ClientController implements Initializable {
             addRadioButton.fire();
         }
 
-    }*/
-    //*****************************************************************************************************************************
+    }
 
     /**
      * This method will create or update Customer objects. When the save/update Button object is interacted with.,
@@ -248,42 +260,56 @@ public class ClientController implements Initializable {
      * @throws SQLException
      */
     public void onSaveButtonClick(ActionEvent actionEvent) throws SQLException {
-        /*try {
+        try {
             String name = nameTextField.getText();
+            String type = busTextField.getText();
             String address = addressTextField.getText();
             String postal = postTextField.getText();
             String phone = phoneTextField.getText();
             Country country = countryComboBox.getValue();
             FirstLevelDivision firstLevel = firstLevelComboBox.getValue();
 
-            if (name.isEmpty() || name.isBlank() || address.isEmpty() || address.isBlank() || postal.isEmpty()
+            if (name.isEmpty() || name.isBlank() || type.isEmpty() || type.isBlank() || address.isEmpty() || address.isBlank() || postal.isEmpty()
                     || postal.isBlank() || phone.isEmpty() || phone.isBlank()
                     || countryComboBox.getValue() == null || firstLevelComboBox.getValue() == null) {
                 messageLabel.setText("Please make sure all fields are completed");
             } else {
-                if (customerIdTextField.getText().isBlank() || customerIdTextField.getText().isEmpty()) {
-                    Client client = new Client(0, name, address, postal, phone, firstLevel.getDivisionId());
-                    ClientDao.insert(client);
+                if (clientIdTextField.getText().isBlank() || clientIdTextField.getText().isEmpty()) {
+                    if(businessRadioButton.isSelected()){
+                        Client client = new BusinessClient(0, name, type, address, postal, phone, firstLevel.getDivisionId());
+                        ClientDao.insert(client);
+                    }
+                    else {
+                        Client client = new ProductClient(0, name, type, address, postal, phone, firstLevel.getDivisionId());
+                        ClientDao.insert(client);
+                    }
+
                 } else {
-                    int customerId = Integer.parseInt(customerIdTextField.getText());
-                    Client client = new Client(customerId, name, address, postal, phone, firstLevel.getDivisionId());
-                    ClientDao.update(client);
+                    int clientId = Integer.parseInt(clientIdTextField.getText());
+                    if(businessRadioButton.isSelected()){
+                        Client client = new BusinessClient(clientId, name, type, address, postal, phone, firstLevel.getDivisionId());
+                        ClientDao.update(client);
+                    }
+                    else {
+                        Client client = new ProductClient(clientId, name, type, address, postal, phone, firstLevel.getDivisionId());
+                        ClientDao.update(client);
+                    }
                 }
-                customerIdTextField.clear();
+                clientIdTextField.clear();
                 nameTextField.clear();
+                busTextField.clear();
                 addressTextField.clear();
                 postTextField.clear();
                 phoneTextField.clear();
                 addRadioButton.fire();
             }
-            customerTableView.setItems(ClientDao.getAll());
+            clientTableView.setItems(ClientDao.getAll());
         }
         catch(SQLException e){
             messageLabel.setText("All fields must be completed and text fields have character limits");
-        }*/
+        }
 
     }
-//**************************************************************************************************************************
 
     /**
      * This method launch a another form. When the user interacts with the Button object,
@@ -294,12 +320,12 @@ public class ClientController implements Initializable {
     public void onBackButtonClick(ActionEvent actionEvent) throws IOException {
         ControllerHelper.changeScene(actionEvent, "mainWindow.fxml", 964, 570);
     }
-//*********************************************************************************************************************
     public void onBusinessRadioSelect(ActionEvent actionEvent) {
         labelClientType.setText("Business Client");
     }
-//************************************************************************************************************************
     public void onProductRadioSelect(ActionEvent actionEvent) {
         labelClientType.setText("Product Description");
     }
+
+
 }

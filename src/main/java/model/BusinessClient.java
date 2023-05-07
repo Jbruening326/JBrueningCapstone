@@ -26,8 +26,4 @@ public class BusinessClient extends Client{
         this.businessName = businessName;
     }
 
-    @Override
-    public String toString() {
-        return businessName;
-    }
 }
